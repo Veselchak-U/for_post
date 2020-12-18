@@ -15,11 +15,16 @@ class MemberModel {
   });
 
   final String id;
+  @JsonKey(nullable: true)
   final DateTime createdAt;
+  @JsonKey(nullable: true)
   final DateTime updatedAt;
   final String displayName;
+  @JsonKey(nullable: true)
   final String photoUrl;
+  @JsonKey(nullable: true)
   final String email;
+  @JsonKey(nullable: true)
   final String phone;
 
   factory MemberModel.fromJson(Map<String, dynamic> json) =>

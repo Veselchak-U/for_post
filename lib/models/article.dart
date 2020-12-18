@@ -1,3 +1,4 @@
+import 'package:for_post/import.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'article.g.dart';
@@ -8,7 +9,7 @@ class ArticleModel {
     this.id,
     this.createdAt,
     this.updatedAt,
-    this.memberId,
+    this.member,
     this.title,
     this.description,
     this.bannerUrl,
@@ -17,7 +18,7 @@ class ArticleModel {
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final String memberId;
+  final MemberModel member;
   final String title;
   final String description;
   final String bannerUrl;

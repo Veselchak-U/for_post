@@ -68,7 +68,7 @@ class _Body extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: Text(
-            'by ${articles[index].memberId}',
+            'by ${articles[index].member.displayName}',
             style: Theme.of(context).textTheme.headline6,
             overflow: TextOverflow.ellipsis,
           ),

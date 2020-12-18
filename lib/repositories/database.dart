@@ -76,10 +76,17 @@ class _API {
       id
       created_at
       updated_at
-      member_id
+      # member_id
       title
       description
       banner_url
+      member {
+        id
+        display_name
+        photo_url
+        email
+        phone
+      }
     }
     fragment MemberFields on member {
       id
