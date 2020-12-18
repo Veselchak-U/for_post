@@ -1,6 +1,10 @@
 # for_post
 
-A new Flutter project.
+Test Flutter application for viewing and adding posts.
+Technologies: BLoC v.6 (Cubit), code generation, GraphQL, Hasura.
+
+## Code generation
+$ flutter packages pub run build_runner build --delete-conflicting-outputs
 
 ## Getting Started
 
