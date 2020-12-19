@@ -31,13 +31,14 @@ class HomeScreen extends StatelessWidget {
 class _HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('For Post'),
         centerTitle: true,
       ),
       body: BlocBuilder(
-        cubit: BlocProvider.of<HomeCubit>(context),
+        cubit: homeCubit,
         builder: (BuildContext context, HomeState state) {
           return Stack(
             children: [
@@ -50,6 +51,14 @@ class _HomeView extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          final Future<ArticleModel> newArticle =
+              navigator.push(AddScreen().getRoute());
+          newArticle.then((value) => homeCubit.addArticle(value));
+        },
+        child: FaIcon(FontAwesomeIcons.fileAlt),
+      ),
     );
   }
 }
@@ -57,26 +66,30 @@ class _HomeView extends StatelessWidget {
 class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final articles = BlocProvider.of<HomeCubit>(context).state.articles;
-    return ListView.builder(
-      itemCount: articles.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          leading: FaIcon(FontAwesomeIcons.bookmark),
-          title: Text(
-            articles[index].title,
-            style: Theme.of(context).textTheme.headline6,
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            'by ${articles[index].member.displayName}',
-            style: Theme.of(context).textTheme.headline6,
-            overflow: TextOverflow.ellipsis,
-          ),
-          onTap: () =>
-              navigator.push(DetailScreen(item: articles[index]).getRoute()),
-        );
-      },
+    final homeCubit = BlocProvider.of<HomeCubit>(context);
+    final articles = homeCubit.state.articles;
+    return RefreshIndicator(
+      onRefresh: () => homeCubit.init(isRefresh: true),
+      child: ListView.builder(
+        itemCount: articles.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            leading: FaIcon(FontAwesomeIcons.bookmark),
+            title: Text(
+              articles[index].title,
+              style: Theme.of(context).textTheme.headline6,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(
+              'by ${articles[index].member.displayName}',
+              style: Theme.of(context).textTheme.headline6,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onTap: () =>
+                navigator.push(DetailScreen(item: articles[index]).getRoute()),
+          );
+        },
+      ),
     );
   }
 }

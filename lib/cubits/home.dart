@@ -11,8 +11,12 @@ class HomeCubit extends Cubit<HomeState> {
 
   final DatabaseRepository dataRepository;
 
-  Future<void> init() async {
-    emit(state.copyWith(status: HomeStatus.busy));
+  Future<void> init({bool isRefresh = false}) async {
+    if (isRefresh) {
+      emit(state.copyWith(status: HomeStatus.refresh));
+    } else {
+      emit(state.copyWith(status: HomeStatus.busy));
+    }
     try {
       final articles = await dataRepository.readArticles();
       emit(state.copyWith(
@@ -24,9 +28,21 @@ class HomeCubit extends Cubit<HomeState> {
       return Future.error(error);
     }
   }
+
+  void addArticle(ArticleModel newArticle) async {
+    if (newArticle == null) {
+      return;
+    }
+    // local changes (optimistic update)
+    final List<ArticleModel> localArticles = [newArticle, ...state.articles];
+    emit(state.copyWith(articles: localArticles));
+    // database changes
+    final dbArticles = await dataRepository.readArticles();
+    emit(state.copyWith(articles: dbArticles));
+  }
 }
 
-enum HomeStatus { initial, busy, ready }
+enum HomeStatus { initial, busy, refresh, ready }
 
 @CopyWith()
 class HomeState extends Equatable {

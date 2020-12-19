@@ -42,7 +42,7 @@ class _DetailScreenState extends State<DetailScreen> {
 class _Body extends StatelessWidget {
   _Body(this.item);
 
-  ArticleModel item;
+  final ArticleModel item;
 
   @override
   Widget build(BuildContext context) {

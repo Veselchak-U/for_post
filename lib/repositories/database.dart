@@ -60,9 +60,57 @@ class DatabaseRepository {
     }
     return result;
   }
+
+  Future<ArticleModel> createArticle(ArticleModel newArticle) async {
+    final options = MutationOptions(
+      documentNode: _API.createArticle,
+      variables: {
+        // TODO: handle member_id
+        'member_id': newArticle.member.id,
+        'title': newArticle.title,
+        'description': newArticle.description,
+        'banner_url': newArticle.bannerUrl,
+      },
+      fetchPolicy: FetchPolicy.noCache,
+      errorPolicy: ErrorPolicy.all,
+    );
+    final mutationResult = await _client
+        .mutate(options)
+        .timeout(Duration(milliseconds: _kTimeoutMillisec));
+    if (mutationResult.hasException) {
+      throw mutationResult.exception;
+    }
+    // out(mutationResult.data);
+    final dataItem =
+        mutationResult.data['insert_article_one'] as Map<String, dynamic>;
+    try {
+      return ArticleModel.fromJson(dataItem);
+    } catch (error) {
+      out(error);
+      return Future.error(error);
+    }
+  }
 }
 
 class _API {
+  static final createArticle = gql(r'''
+    mutation CreateArticle(
+      $member_id: uuid!,
+      $title: String!,
+      $description: String!,
+      $banner_url: String!,
+    ) {
+      insert_article_one(object: {
+        member_id: $member_id,
+        title: $title,
+        description: $description,
+        banner_url: $banner_url,
+        }) {
+        ...ArticleFields
+      }
+    }
+  ''')..definitions.addAll(fragments.definitions);
+
   static final readLastArticles = gql(r'''
     query ReadLastArticles {
       article(order_by: {updated_at: desc}, limit: 10) {

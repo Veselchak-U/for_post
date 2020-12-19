@@ -1,11 +1,13 @@
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:for_post/import.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'article.g.dart';
 
+@CopyWith()
 @JsonSerializable()
 class ArticleModel {
-  ArticleModel({
+  const ArticleModel({
     this.id,
     this.createdAt,
     this.updatedAt,
