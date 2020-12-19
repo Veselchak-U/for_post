@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:for_post/import.dart';
+import 'package:flutter/foundation.dart';
 
 part 'home.g.dart';
 

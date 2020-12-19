@@ -1,5 +1,7 @@
 # Private files
 local.dart
+apollo.config.js
+schema.json
 
 # Miscellaneous
 *.class
