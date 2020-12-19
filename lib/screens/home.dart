@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:for_post/import.dart';
+import 'package:for_post/screens/detail.dart';
 
 class HomeScreen extends StatelessWidget {
   Route<T> getRoute<T>() {
@@ -72,6 +73,8 @@ class _Body extends StatelessWidget {
             style: Theme.of(context).textTheme.headline6,
             overflow: TextOverflow.ellipsis,
           ),
+          onTap: () =>
+              navigator.push(DetailScreen(item: articles[index]).getRoute()),
         );
       },
     );

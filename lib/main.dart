@@ -26,15 +26,6 @@ NavigatorState get navigator => _navigatorKey.currentState;
 class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final Future<List<ArticleModel>> result =
-    //     RepositoryProvider.of<DatabaseRepository>(context).readArticles();
-    // result.then(
-    //   (value) => value.forEach(
-    //     (e) {
-    //       print(e.title);
-    //     },
-    //   ),
-    // );
     return MaterialApp(
       title: 'For Post',
       navigatorKey: _navigatorKey,

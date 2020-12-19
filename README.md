@@ -7,27 +7,27 @@ Technologies: BLoC v.6 (Cubit), code generation, GraphQL, Hasura.
     $ flutter packages pub run build_runner build --delete-conflicting-outputs
 
 ## Сonnecting GraphQL extention
-- Add [Apollo extention](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) in VSCode
+1) Add [Apollo extention](https://marketplace.visualstudio.com/items?itemName=apollographql.vscode-apollo) in VSCode
 
-- Add config file apollo.config.js with content:
+2) Add config file apollo.config.js with content:
 
     module.exports = {
-        client: {
-          includes: ['./lib/**/*.dart'],
-          service: {
-            name: 'app_name',
-            url: 'graphgl_endpoint_url',
-            // optional headers
-            headers: {
-              'x-hasura-admin-secret': 'secret_phrase',
-              'x-hasura-role': 'admin',
-            },
-            // optional disable SSL validation check
-            skipSSLValidation: true,
+      client: {
+        includes: ['./lib/**/*.dart'],
+        service: {
+          name: 'app_name',
+          url: 'graphgl_endpoint_url',
+          // optional headers
+          headers: {
+            'x-hasura-admin-secret': 'secret_phrase',
+            'x-hasura-role': 'admin',
           },
+          // optional disable SSL validation check
+          skipSSLValidation: true,
         },
-      }
+      },
+    }
 
-- Download schema.json:
+3) Download schema.json:
 
     $ apollo schema:download
