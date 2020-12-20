@@ -90,9 +90,63 @@ class DatabaseRepository {
       return Future.error(error);
     }
   }
+
+  Future<MemberModel> login(MemberModel user) async {
+    MemberModel result;
+
+    final options = QueryOptions(
+      documentNode: _API.findMember,
+      variables: {
+        'email': user.email,
+        'phone': user.phone,
+      },
+      fetchPolicy: FetchPolicy.noCache,
+      errorPolicy: ErrorPolicy.all,
+    );
+    final queryResult = await _client
+        .query(options)
+        .timeout(Duration(milliseconds: _kTimeoutMillisec));
+    if (queryResult.hasException) {
+      throw queryResult.exception;
+    }
+    // out(queryResult.data);
+    final dataItems =
+        (queryResult.data['member'] as List).cast<Map<String, dynamic>>();
+    // TODO: remake to Future.error
+    if (dataItems.isEmpty) {
+      return result;
+    }
+    // TODO: remake to Future.error
+    if (dataItems.length > 1) {
+      return result;
+    }
+    try {
+      result = MemberModel.fromJson(dataItems[0]);
+    } catch (error) {
+      out(error);
+      return Future.error(error);
+    }
+
+    return result;
+  }
 }
 
 class _API {
+  static final findMember = gql(r'''
+    query FindMember(
+      $email: String!,
+      $phone: String!,
+    ) {
+      member(where: {
+          email: {_eq: $email},
+          _and: {phone: {_eq: $phone}}
+        }
+      ) {
+        ...MemberFields
+      }
+    }
+  ''')..definitions.addAll(fragments.definitions);
+
   static final createArticle = gql(r'''
     mutation CreateArticle(
       $member_id: uuid!,

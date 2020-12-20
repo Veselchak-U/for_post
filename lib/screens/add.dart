@@ -15,17 +15,17 @@ class AddScreen extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) {
         final addCubit = AddCubit(
-          repo: RepositoryProvider.of<DatabaseRepository>(context),
+          dataRepository: RepositoryProvider.of<DatabaseRepository>(context),
         );
         return addCubit;
       },
       lazy: false,
-      child: _AddBody(),
+      child: _AddView(),
     );
   }
 }
 
-class _AddBody extends StatelessWidget {
+class _AddView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;

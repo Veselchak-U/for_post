@@ -7,12 +7,12 @@ import 'package:for_post/import.dart';
 part 'add.g.dart';
 
 class AddCubit extends Cubit<AddState> {
-  AddCubit({this.repo}) : super(const AddState());
+  AddCubit({this.dataRepository}) : super(const AddState());
 
-  final DatabaseRepository repo;
+  final DatabaseRepository dataRepository;
 
   void updateArticle(ArticleModel newArticle) {
-    out('newArticle.title=${newArticle.title}');
+    // out('newArticle.title=${newArticle.title}');
     emit(state.copyWith(newArticle: newArticle));
   }
 
@@ -20,7 +20,7 @@ class AddCubit extends Cubit<AddState> {
     bool result = false;
     emit(state.copyWith(status: AddStatus.busy));
     try {
-      await repo.createArticle(state.newArticle);
+      await dataRepository.createArticle(state.newArticle);
       result = true;
     } catch (e) {
       out(e);
