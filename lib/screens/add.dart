@@ -132,7 +132,7 @@ class _AddFormState extends State<_AddForm> {
               labelText: 'Banner url',
               helperText: '',
             ),
-            // initialValue: 'Photo url',
+            initialValue: 'http:\\',
             textInputAction: TextInputAction.next,
             onChanged: (value) {
               // addCubit.updateNewPet(newArticle.copyWith(photos: value));

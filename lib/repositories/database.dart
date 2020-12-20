@@ -16,7 +16,9 @@ class DatabaseRepository {
     final httpLink = HttpLink(
       uri: kGraphQLEndpoint,
       headers: {
+        // TODO: remove secret and add user role
         'x-hasura-admin-secret': kSecret,
+        // 'x-hasura-role': 'user',
       },
     );
     // final authLink = AuthLink(
@@ -91,7 +93,7 @@ class DatabaseRepository {
     }
   }
 
-  Future<MemberModel> login(MemberModel user) async {
+  Future<MemberModel> loginMember(MemberModel user) async {
     MemberModel result;
 
     final options = QueryOptions(
@@ -126,12 +128,65 @@ class DatabaseRepository {
       out(error);
       return Future.error(error);
     }
+    out('result.displayName=${result.displayName}');
+    return result;
+  }
 
+  Future<MemberModel> upsertMember(MemberModel user) async {
+    MemberModel result;
+
+    final options = MutationOptions(
+      documentNode: _API.upsertMember,
+      variables: {
+        'display_name': user.displayName,
+        'photo_url': user.photoUrl,
+        'email': user.email,
+        'phone': user.phone,
+      },
+      fetchPolicy: FetchPolicy.noCache,
+      errorPolicy: ErrorPolicy.all,
+    );
+    final mutationResult = await _client
+        .mutate(options)
+        .timeout(Duration(milliseconds: _kTimeoutMillisec));
+    if (mutationResult.hasException) {
+      throw mutationResult.exception;
+    }
+    // out(queryResult.data);
+    final dataItem = mutationResult.data['insert_member_one'] as Map<String, dynamic>;
+    try {
+      result = MemberModel.fromJson(dataItem);
+    } catch (error) {
+      out(error);
+      return Future.error(error);
+    }
     return result;
   }
 }
 
 class _API {
+  static final upsertMember = gql(r'''
+    mutation UpsertMember(
+      $display_name: String!,
+      $photo_url: String!,
+      $email: String!,
+      $phone: String!,
+    ) {
+      insert_member_one(object: {
+        display_name: $display_name,
+        photo_url: $photo_url,
+        email: $email,
+        phone: $phone
+      },
+      on_conflict: {
+        constraint: member_email_phone_key,
+        update_columns: [display_name, photo_url]
+      }) {
+        ...MemberFields
+      }
+    }
+  ''')..definitions.addAll(fragments.definitions);
+
   static final findMember = gql(r'''
     query FindMember(
       $email: String!,

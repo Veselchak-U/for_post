@@ -17,6 +17,12 @@ class LoginScreen extends StatelessWidget {
         final loginCubit = LoginCubit(
           dataRepository: RepositoryProvider.of<DatabaseRepository>(context),
         );
+        final user = MemberModel(
+          email: 'JohnDoe@live.net',
+          phone: '44444',
+        );
+        loginCubit.updateUser(user);
+        loginCubit.login();
         return loginCubit;
       },
       lazy: false,
@@ -49,12 +55,106 @@ class _LoginView extends StatelessWidget {
 }
 
 class _LoginBody extends StatelessWidget {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final loginCubit = BlocProvider.of<LoginCubit>(context);
+    final loginUser = loginCubit.state.user;
     return Form(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [],
+      key: _formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'For Post',
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              const SizedBox(height: 40),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'E-mail',
+                  helperText: '',
+                ),
+                initialValue: loginUser.email,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.emailAddress,
+                onFieldSubmitted: (value) {
+                  loginCubit.updateUser(loginUser.copyWith(email: value));
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    (value == null || value.isEmpty || value.length < 7)
+                        ? 'Input correct e-mail'
+                        : null,
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Phone',
+                  helperText: '',
+                ),
+                initialValue: loginUser.phone,
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.phone,
+                onFieldSubmitted: (value) {
+                  loginCubit.updateUser(loginUser.copyWith(phone: value));
+                },
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                validator: (value) =>
+                    (value == null || value.isEmpty || value.length < 5)
+                        ? 'Input correct phone'
+                        : null,
+              ),
+              const SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        out('Form OK');
+                        final result = await loginCubit.login();
+                        if (result) {
+                          navigator.pushAndRemoveUntil(
+                            HomeScreen().getRoute(),
+                            (Route route) => false,
+                          );
+                        }
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text('Login'),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  RaisedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        out('Form OK');
+                        final result = await loginCubit.signup();
+                        if (result) {
+                          navigator.pushAndRemoveUntil(
+                            HomeScreen().getRoute(),
+                            (Route route) => false,
+                          );
+                        }
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text('Signup'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

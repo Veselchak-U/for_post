@@ -11,16 +11,13 @@ class LoginCubit extends Cubit<LoginState> {
   final DatabaseRepository dataRepository;
 
   void updateUser(MemberModel newUser) {
-    out('newUser.email=${newUser.email}');
-    out('newUser.phone=${newUser.phone}');
     emit(state.copyWith(user: newUser));
   }
 
-  void signup() {}
-
-  void login() async {
+  Future<bool> signup() async {
+    bool result = false;
     emit(state.copyWith(status: LoginStatus.busy));
-    final MemberModel loginResult = await dataRepository.login(state.user);
+    final MemberModel loginResult = await dataRepository.upsertMember(state.user);
     if (loginResult == null) {
       emit(state.copyWith(
         status: LoginStatus.unauthenticated,
@@ -30,7 +27,27 @@ class LoginCubit extends Cubit<LoginState> {
         status: LoginStatus.authenticated,
         user: loginResult,
       ));
+      result = true;
     }
+    return result;
+  }
+
+  Future<bool> login() async {
+    bool result = false;
+    emit(state.copyWith(status: LoginStatus.busy));
+    final MemberModel loginResult = await dataRepository.loginMember(state.user);
+    if (loginResult == null) {
+      emit(state.copyWith(
+        status: LoginStatus.unauthenticated,
+      ));
+    } else {
+      emit(state.copyWith(
+        status: LoginStatus.authenticated,
+        user: loginResult,
+      ));
+      result = true;
+    }
+    return result;
   }
 
   void logout() {
