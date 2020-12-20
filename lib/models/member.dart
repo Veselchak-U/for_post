@@ -34,14 +34,6 @@ class MemberModel {
     id: '',
   );
 
-  // Test user
-  static const test = MemberModel(
-    id: 'db2f755b-2098-4f43-8f3a-a8b698acfb8a',
-    displayName: 'John Doe',
-    photoUrl:
-        'https://cdn.pixabay.com/photo/2013/07/13/09/47/negro-156005_960_720.png',
-  );
-
   factory MemberModel.fromJson(Map<String, dynamic> json) =>
       _$MemberModelFromJson(json);
 

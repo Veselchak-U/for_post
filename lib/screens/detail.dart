@@ -33,6 +33,7 @@ class _DetailScreenState extends State<DetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('View article'),
+        centerTitle: true,
       ),
       body: _Body(item),
     );
@@ -49,25 +50,32 @@ class _Body extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text(
-              item.title,
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Text(
-              item.member.displayName,
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-            Text(
-              item.createdAt.toString(),
-              style: Theme.of(context).textTheme.subtitle2,
-            ),
-            Text(
-              item.description,
-              style: Theme.of(context).textTheme.subtitle1,
-            ),
-          ],
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                item.title,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'by ${item.member.displayName}',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  Text(
+                    ', ${dateTimeformatter.format(item.createdAt)}',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                ],
+              ),
+              Text(
+                item.description,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ],
+          ),
         ),
       ),
     );

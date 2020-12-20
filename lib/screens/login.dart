@@ -17,12 +17,12 @@ class LoginScreen extends StatelessWidget {
         final loginCubit = LoginCubit(
           dataRepository: RepositoryProvider.of<DatabaseRepository>(context),
         );
-        final user = MemberModel(
-          email: 'JohnDoe@live.net',
-          phone: '44444',
-        );
-        loginCubit.updateUser(user);
-        loginCubit.login();
+        // final user = MemberModel(
+        //   email: 'JohnDoe@live.net',
+        //   phone: '44444',
+        // );
+        // loginCubit.updateUser(user);
+        // loginCubit.login();
         return loginCubit;
       },
       lazy: false,
@@ -54,13 +54,25 @@ class _LoginView extends StatelessWidget {
   }
 }
 
-class _LoginBody extends StatelessWidget {
+class _LoginBody extends StatefulWidget {
+  @override
+  _LoginBodyState createState() => _LoginBodyState();
+}
+
+class _LoginBodyState extends State<_LoginBody> {
   final _formKey = GlobalKey<FormState>();
+  LoginCubit loginCubit;
+  // MemberModel loginUser;
+
+  @override
+  void initState() {
+    super.initState();
+    loginCubit = BlocProvider.of<LoginCubit>(context);
+    // loginUser = loginCubit.state.user;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final loginCubit = BlocProvider.of<LoginCubit>(context);
-    final loginUser = loginCubit.state.user;
     return Form(
       key: _formKey,
       child: Padding(
@@ -80,11 +92,12 @@ class _LoginBody extends StatelessWidget {
                   labelText: 'E-mail',
                   helperText: '',
                 ),
-                initialValue: loginUser.email,
+                initialValue: loginCubit.state.user.email,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
-                onFieldSubmitted: (value) {
-                  loginCubit.updateUser(loginUser.copyWith(email: value));
+                onSaved: (value) {
+                  out('onSaved E-mail=$value');
+                  loginCubit.updateUser(loginCubit.state.user.copyWith(email: value));
                 },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
@@ -97,11 +110,12 @@ class _LoginBody extends StatelessWidget {
                   labelText: 'Phone',
                   helperText: '',
                 ),
-                initialValue: loginUser.phone,
+                initialValue: loginCubit.state.user.phone,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.phone,
-                onFieldSubmitted: (value) {
-                  loginCubit.updateUser(loginUser.copyWith(phone: value));
+                onSaved: (value) {
+                  out('onSaved Phone=$value');
+                  loginCubit.updateUser(loginCubit.state.user.copyWith(phone: value));
                 },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) =>
@@ -116,6 +130,7 @@ class _LoginBody extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
+                        _formKey.currentState.save();
                         out('Form OK');
                         final result = await loginCubit.login();
                         if (result) {
@@ -135,6 +150,7 @@ class _LoginBody extends StatelessWidget {
                   RaisedButton(
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
+                        _formKey.currentState.save();
                         out('Form OK');
                         final result = await loginCubit.signup();
                         if (result) {

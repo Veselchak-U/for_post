@@ -10,6 +10,8 @@ class DatabaseRepository {
     _client = _getClient();
   }
 
+  MemberModel _currentUser = MemberModel.empty;
+  MemberModel get currentUser => _currentUser;
   GraphQLClient _client;
 
   GraphQLClient _getClient() {
@@ -64,6 +66,10 @@ class DatabaseRepository {
   }
 
   Future<ArticleModel> createArticle(ArticleModel newArticle) async {
+    out('newArticle.member.id=${newArticle.member.id}');
+    out('newArticle.title=${newArticle.title}');
+    out('newArticle.description=${newArticle.description}');
+    out('newArticle.bannerUrl=${newArticle.bannerUrl}');
     final options = MutationOptions(
       documentNode: _API.createArticle,
       variables: {
@@ -124,11 +130,12 @@ class DatabaseRepository {
     }
     try {
       result = MemberModel.fromJson(dataItems[0]);
+      _currentUser = result;
     } catch (error) {
       out(error);
       return Future.error(error);
     }
-    out('result.displayName=${result.displayName}');
+    // out('result.displayName=${result.displayName}');
     return result;
   }
 
@@ -152,10 +159,12 @@ class DatabaseRepository {
     if (mutationResult.hasException) {
       throw mutationResult.exception;
     }
-    // out(queryResult.data);
-    final dataItem = mutationResult.data['insert_member_one'] as Map<String, dynamic>;
+    // out(mutationResult.data);
+    final dataItem =
+        mutationResult.data['insert_member_one'] as Map<String, dynamic>;
     try {
       result = MemberModel.fromJson(dataItem);
+      _currentUser = result;
     } catch (error) {
       out(error);
       return Future.error(error);
@@ -167,8 +176,8 @@ class DatabaseRepository {
 class _API {
   static final upsertMember = gql(r'''
     mutation UpsertMember(
-      $display_name: String!,
-      $photo_url: String!,
+      $display_name: String,
+      $photo_url: String,
       $email: String!,
       $phone: String!,
     ) {

@@ -36,6 +36,18 @@ class _HomeView extends StatelessWidget {
       appBar: AppBar(
         title: Text('For Post'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Logout',
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              navigator.pushAndRemoveUntil(
+                LoginScreen().getRoute(),
+                (Route route) => false,
+              );
+            },
+          )
+        ],
       ),
       body: BlocBuilder(
         cubit: homeCubit,
@@ -52,6 +64,7 @@ class _HomeView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: 'New article',
         onPressed: () {
           final Future<ArticleModel> newArticle =
               navigator.push(AddScreen().getRoute());

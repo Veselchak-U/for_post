@@ -17,6 +17,7 @@ class AddScreen extends StatelessWidget {
         final addCubit = AddCubit(
           dataRepository: RepositoryProvider.of<DatabaseRepository>(context),
         );
+        addCubit.init();
         return addCubit;
       },
       lazy: false,
@@ -120,7 +121,7 @@ class _AddFormState extends State<_AddForm> {
 
   @override
   Widget build(BuildContext context) {
-    final ArticleModel newArticle = addCubit.state.newArticle;
+    // final ArticleModel newArticle = addCubit.state.newArticle;
     // при изменении URL фото "извне" обновляем содержимое соответствующего поля
     return Form(
       key: _formKey,
@@ -134,8 +135,8 @@ class _AddFormState extends State<_AddForm> {
             ),
             initialValue: 'http:\\',
             textInputAction: TextInputAction.next,
-            onChanged: (value) {
-              // addCubit.updateNewPet(newArticle.copyWith(photos: value));
+            onSaved: (value) {
+              addCubit.updateArticle(addCubit.state.newArticle.copyWith(bannerUrl: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
@@ -143,7 +144,7 @@ class _AddFormState extends State<_AddForm> {
               if (value.isEmpty) {
                 result = 'Input banner URL';
               } else if (Uri.parse(value).isAbsolute) {
-                addCubit.updateArticle(newArticle.copyWith(bannerUrl: value));
+                addCubit.updateArticle(addCubit.state.newArticle.copyWith(bannerUrl: value));
                 result = null;
               } else {
                 result = 'Input correct url';
@@ -158,8 +159,8 @@ class _AddFormState extends State<_AddForm> {
             ),
             initialValue: 'Title',
             textInputAction: TextInputAction.next,
-            onFieldSubmitted: (value) {
-              addCubit.updateArticle(newArticle.copyWith(title: value));
+            onSaved: (value) {
+              addCubit.updateArticle(addCubit.state.newArticle.copyWith(title: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) =>
@@ -175,8 +176,8 @@ class _AddFormState extends State<_AddForm> {
             maxLines: 10,
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.multiline,
-            onFieldSubmitted: (value) {
-              addCubit.updateArticle(newArticle.copyWith(description: value));
+            onSaved: (value) {
+              addCubit.updateArticle(addCubit.state.newArticle.copyWith(description: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) =>
@@ -186,6 +187,7 @@ class _AddFormState extends State<_AddForm> {
             child: ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
                   out('Form OK');
                   final result = await addCubit.addArticle();
                   if (result) {

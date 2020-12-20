@@ -11,8 +11,18 @@ class AddCubit extends Cubit<AddState> {
 
   final DatabaseRepository dataRepository;
 
+  Future<void> init() async {
+    emit(state.copyWith(status: AddStatus.busy));
+    final user = dataRepository.currentUser;
+    out('user.email=${user.email}');
+    out('user.phone=${user.phone}');
+    emit(state.copyWith(
+      status: AddStatus.ready,
+      newArticle: ArticleModel(member: user),
+    ));
+  }
+
   void updateArticle(ArticleModel newArticle) {
-    // out('newArticle.title=${newArticle.title}');
     emit(state.copyWith(newArticle: newArticle));
   }
 
@@ -38,7 +48,7 @@ class AddState extends Equatable {
   const AddState({
     this.status = AddStatus.initial,
     this.newArticle = const ArticleModel(
-      member: MemberModel.test,
+      // member: MemberModel.empty,
     ),
   });
 
