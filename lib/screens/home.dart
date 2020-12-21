@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:for_post/import.dart';
 import 'package:for_post/screens/detail.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
   Route<T> getRoute<T>() {
@@ -41,10 +42,11 @@ class _HomeView extends StatelessWidget {
             tooltip: 'Logout',
             icon: Icon(Icons.logout),
             onPressed: () {
-              navigator.pushAndRemoveUntil(
-                LoginScreen().getRoute(),
-                (Route route) => false,
-              );
+              Get.offAll(LoginScreen());
+              // navigator.pushAndRemoveUntil(
+              //   LoginScreen().getRoute(),
+              //   (Route route) => false,
+              // );
             },
           )
         ],
@@ -66,8 +68,8 @@ class _HomeView extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         tooltip: 'New article',
         onPressed: () {
-          final Future<ArticleModel> newArticle =
-              navigator.push(AddScreen().getRoute());
+          final Future<ArticleModel> newArticle = Get.to(AddScreen());
+          // navigator.push(AddScreen().getRoute());
           newArticle.then((value) => homeCubit.addArticle(value));
         },
         child: FaIcon(FontAwesomeIcons.fileAlt),
@@ -98,8 +100,8 @@ class _Body extends StatelessWidget {
               style: Theme.of(context).textTheme.headline6,
               overflow: TextOverflow.ellipsis,
             ),
-            onTap: () =>
-                navigator.push(DetailScreen(item: articles[index]).getRoute()),
+            onTap: () => Get.to(DetailScreen(item: articles[index])),
+            // navigator.push(DetailScreen(item: articles[index]).getRoute()),
           );
         },
       ),

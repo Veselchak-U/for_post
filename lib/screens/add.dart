@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:for_post/import.dart';
+import 'package:get/get.dart';
 
 class AddScreen extends StatelessWidget {
   Route<T> getRoute<T>() {
@@ -191,7 +192,8 @@ class _AddFormState extends State<_AddForm> {
                   out('Form OK');
                   final result = await addCubit.addArticle();
                   if (result) {
-                    navigator.pop(addCubit.state.newArticle);
+                    Get.back(result: addCubit.state.newArticle);
+                    // navigator.pop(addCubit.state.newArticle);
                   }
                 }
               },

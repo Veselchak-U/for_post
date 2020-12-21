@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:for_post/import.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   Route<T> getRoute<T>() {
@@ -134,10 +135,11 @@ class _LoginBodyState extends State<_LoginBody> {
                         out('Form OK');
                         final result = await loginCubit.login();
                         if (result) {
-                          navigator.pushAndRemoveUntil(
-                            HomeScreen().getRoute(),
-                            (Route route) => false,
-                          );
+                          Get.offAll(HomeScreen());
+                          // navigator.pushAndRemoveUntil(
+                          //   HomeScreen().getRoute(),
+                          //   (Route route) => false,
+                          // );
                         }
                       }
                     },
@@ -154,10 +156,11 @@ class _LoginBodyState extends State<_LoginBody> {
                         out('Form OK');
                         final result = await loginCubit.signup();
                         if (result) {
-                          navigator.pushAndRemoveUntil(
-                            HomeScreen().getRoute(),
-                            (Route route) => false,
-                          );
+                          Get.offAll(HomeScreen());
+                          // navigator.pushAndRemoveUntil(
+                          //   HomeScreen().getRoute(),
+                          //   (Route route) => false,
+                          // );
                         }
                       }
                     },
