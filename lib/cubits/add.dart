@@ -14,8 +14,6 @@ class AddCubit extends Cubit<AddState> {
   Future<void> init() async {
     emit(state.copyWith(status: AddStatus.busy));
     final user = dataRepository.currentUser;
-    out('user.email=${user.email}');
-    out('user.phone=${user.phone}');
     emit(state.copyWith(
       status: AddStatus.ready,
       newArticle: ArticleModel(member: user),
@@ -32,8 +30,9 @@ class AddCubit extends Cubit<AddState> {
     try {
       await dataRepository.createArticle(state.newArticle);
       result = true;
-    } catch (e) {
-      out(e);
+    } catch (error) {
+      out('AddCubit: addArticle(): $error');
+      errorSnackbar(error);
     } finally {
       emit(state.copyWith(status: AddStatus.ready));
     }
@@ -47,9 +46,7 @@ enum AddStatus { initial, busy, ready }
 class AddState extends Equatable {
   const AddState({
     this.status = AddStatus.initial,
-    this.newArticle = const ArticleModel(
-      // member: MemberModel.empty,
-    ),
+    this.newArticle = const ArticleModel(),
   });
 
   final AddStatus status;

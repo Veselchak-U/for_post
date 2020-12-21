@@ -4,13 +4,6 @@ import 'package:for_post/import.dart';
 import 'package:get/get.dart';
 
 class AddScreen extends StatelessWidget {
-  Route<T> getRoute<T>() {
-    return buildRoute<T>(
-      '/add',
-      builder: (_) => this,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -42,8 +35,7 @@ class _AddView extends StatelessWidget {
                     elevation: 0.0,
                     expandedHeight: screenHeight / 4,
                     title: Text(
-                      'Add article',
-                      // style: TextStyle(color: theme.primaryColor),
+                      'New article',
                     ),
                     centerTitle: true,
                     flexibleSpace: (addState.newArticle.bannerUrl == null ||
@@ -82,14 +74,8 @@ class _AddView extends StatelessWidget {
 class _AddPhotoButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AddCubit addCubit = BlocProvider.of<AddCubit>(context);
     return ElevatedButton(
-      onPressed: () {
-        // // изменяем URL фото "извне" формы
-        // addCubit.updateNewPet(addCubit.state.newArticle.copyWith(
-        //     photos:
-        //         'https://cdn.pixabay.com/photo/2014/11/30/14/11/cat-551554_960_720.jpg'));
-      },
+      onPressed: () {},
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Row(
@@ -137,7 +123,8 @@ class _AddFormState extends State<_AddForm> {
             initialValue: 'http:\\',
             textInputAction: TextInputAction.next,
             onSaved: (value) {
-              addCubit.updateArticle(addCubit.state.newArticle.copyWith(bannerUrl: value));
+              addCubit.updateArticle(
+                  addCubit.state.newArticle.copyWith(bannerUrl: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) {
@@ -145,7 +132,8 @@ class _AddFormState extends State<_AddForm> {
               if (value.isEmpty) {
                 result = 'Input banner URL';
               } else if (Uri.parse(value).isAbsolute) {
-                addCubit.updateArticle(addCubit.state.newArticle.copyWith(bannerUrl: value));
+                addCubit.updateArticle(
+                    addCubit.state.newArticle.copyWith(bannerUrl: value));
                 result = null;
               } else {
                 result = 'Input correct url';
@@ -161,7 +149,8 @@ class _AddFormState extends State<_AddForm> {
             initialValue: 'Title',
             textInputAction: TextInputAction.next,
             onSaved: (value) {
-              addCubit.updateArticle(addCubit.state.newArticle.copyWith(title: value));
+              addCubit.updateArticle(
+                  addCubit.state.newArticle.copyWith(title: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) =>
@@ -178,7 +167,8 @@ class _AddFormState extends State<_AddForm> {
             textInputAction: TextInputAction.done,
             keyboardType: TextInputType.multiline,
             onSaved: (value) {
-              addCubit.updateArticle(addCubit.state.newArticle.copyWith(description: value));
+              addCubit.updateArticle(
+                  addCubit.state.newArticle.copyWith(description: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
             validator: (value) =>
@@ -193,7 +183,6 @@ class _AddFormState extends State<_AddForm> {
                   final result = await addCubit.addArticle();
                   if (result) {
                     Get.back(result: addCubit.state.newArticle);
-                    // navigator.pop(addCubit.state.newArticle);
                   }
                 }
               },

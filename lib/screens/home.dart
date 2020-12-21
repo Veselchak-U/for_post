@@ -6,13 +6,6 @@ import 'package:for_post/screens/detail.dart';
 import 'package:get/get.dart';
 
 class HomeScreen extends StatelessWidget {
-  Route<T> getRoute<T>() {
-    return buildRoute<T>(
-      '/home',
-      builder: (_) => this,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -43,10 +36,6 @@ class _HomeView extends StatelessWidget {
             icon: Icon(Icons.logout),
             onPressed: () {
               Get.offAll(LoginScreen());
-              // navigator.pushAndRemoveUntil(
-              //   LoginScreen().getRoute(),
-              //   (Route route) => false,
-              // );
             },
           )
         ],
@@ -69,7 +58,6 @@ class _HomeView extends StatelessWidget {
         tooltip: 'New article',
         onPressed: () {
           final Future<ArticleModel> newArticle = Get.to(AddScreen());
-          // navigator.push(AddScreen().getRoute());
           newArticle.then((value) => homeCubit.addArticle(value));
         },
         child: FaIcon(FontAwesomeIcons.fileAlt),
@@ -101,7 +89,6 @@ class _Body extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             onTap: () => Get.to(DetailScreen(item: articles[index])),
-            // navigator.push(DetailScreen(item: articles[index]).getRoute()),
           );
         },
       ),

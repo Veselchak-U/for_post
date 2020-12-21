@@ -8,13 +8,6 @@ class DetailScreen extends StatefulWidget {
 
   final ArticleModel item;
 
-  Route<T> getRoute<T>() {
-    return buildRoute<T>(
-      '/detail?id=${item.id}',
-      builder: (_) => this,
-    );
-  }
-
   @override
   _DetailScreenState createState() => _DetailScreenState();
 }

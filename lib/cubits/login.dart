@@ -11,37 +11,21 @@ class LoginCubit extends Cubit<LoginState> {
   final DatabaseRepository dataRepository;
 
   void updateUser(MemberModel newUser) {
-    out('updateUser: newUser.email=${newUser.email}');
     emit(state.copyWith(user: newUser));
-    out('updateUser: state.user.email=${state.user.email}');
-  }
-
-  Future<bool> signup() async {
-    bool result = false;
-    out('state.user.email=${state.user.email}');
-    emit(state.copyWith(status: LoginStatus.busy));
-    final MemberModel loginResult = await dataRepository.upsertMember(state.user);
-    out('loginResult.email=${loginResult.email}');
-
-    if (loginResult == null) {
-      emit(state.copyWith(
-        status: LoginStatus.unauthenticated,
-      ));
-    } else {
-      emit(state.copyWith(
-        status: LoginStatus.authenticated,
-        user: loginResult,
-      ));
-      result = true;
-    }
-    return result;
   }
 
   Future<bool> login() async {
     bool result = false;
     emit(state.copyWith(status: LoginStatus.busy));
-    final MemberModel loginResult = await dataRepository.loginMember(state.user);
+    MemberModel loginResult;
+    try {
+      loginResult = await dataRepository.loginMember(state.user);
+    } catch (error) {
+      out('LoginCubit: login(): $error');
+      errorSnackbar(error);
+    }
     if (loginResult == null) {
+      errorSnackbar('Failed to log in with user credentials.');
       emit(state.copyWith(
         status: LoginStatus.unauthenticated,
       ));
@@ -57,6 +41,31 @@ class LoginCubit extends Cubit<LoginState> {
 
   void logout() {
     emit(const LoginState());
+  }
+
+  Future<bool> signup() async {
+    bool result = false;
+    emit(state.copyWith(status: LoginStatus.busy));
+    MemberModel loginResult;
+    try {
+      loginResult = await dataRepository.upsertMember(state.user);
+    } catch (error) {
+      out('LoginCubit: signup(): $error');
+      errorSnackbar(error);
+    }
+    if (loginResult == null) {
+      errorSnackbar('Failed to register a new user.');
+      emit(state.copyWith(
+        status: LoginStatus.unauthenticated,
+      ));
+    } else {
+      emit(state.copyWith(
+        status: LoginStatus.authenticated,
+        user: loginResult,
+      ));
+      result = true;
+    }
+    return result;
   }
 }
 

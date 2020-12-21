@@ -1,6 +1,5 @@
 export 'common/const.dart';
 export 'common/helper.dart';
-export 'common/route.dart';
 export 'cubits/add.dart';
 export 'cubits/home.dart';
 export 'cubits/login.dart';

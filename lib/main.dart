@@ -21,15 +21,11 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// final _navigatorKey = GlobalKey<NavigatorState>();
-// NavigatorState get navigator => _navigatorKey.currentState;
-
 class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'For Post',
-      // navigatorKey: _navigatorKey,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

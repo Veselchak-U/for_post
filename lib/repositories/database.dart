@@ -58,8 +58,9 @@ class DatabaseRepository {
       try {
         result.add(ArticleModel.fromJson(item));
       } catch (error) {
-        out(error);
-        return Future.error(error);
+        rethrow;
+        // out(error);
+        // return Future.error(error);
       }
     }
     return result;
@@ -94,8 +95,9 @@ class DatabaseRepository {
     try {
       return ArticleModel.fromJson(dataItem);
     } catch (error) {
-      out(error);
-      return Future.error(error);
+      rethrow;
+      // out(error);
+      // return Future.error(error);
     }
   }
 
@@ -132,8 +134,9 @@ class DatabaseRepository {
       result = MemberModel.fromJson(dataItems[0]);
       _currentUser = result;
     } catch (error) {
-      out(error);
-      return Future.error(error);
+      rethrow;
+      // out(error);
+      // return Future.error(error);
     }
     // out('result.displayName=${result.displayName}');
     return result;
@@ -166,8 +169,9 @@ class DatabaseRepository {
       result = MemberModel.fromJson(dataItem);
       _currentUser = result;
     } catch (error) {
-      out(error);
-      return Future.error(error);
+      rethrow;
+      // out(error);
+      // return Future.error(error);
     }
     return result;
   }

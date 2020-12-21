@@ -24,8 +24,9 @@ class HomeCubit extends Cubit<HomeState> {
         articles: articles,
       ));
     } catch (error) {
-      out(error);
-      return Future.error(error);
+      out('HomeCubit: init(): $error');
+      errorSnackbar(error);
+      // return Future.error(error);
     }
   }
 
@@ -37,7 +38,13 @@ class HomeCubit extends Cubit<HomeState> {
     final List<ArticleModel> localArticles = [newArticle, ...state.articles];
     emit(state.copyWith(articles: localArticles));
     // database changes
-    final dbArticles = await dataRepository.readArticles();
+    List<ArticleModel> dbArticles;
+    try {
+      dbArticles = await dataRepository.readArticles();
+    } catch (error) {
+      out('HomeCubit: addArticle(): $error');
+      errorSnackbar(error);
+    }
     emit(state.copyWith(articles: dbArticles));
   }
 }

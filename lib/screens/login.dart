@@ -4,13 +4,6 @@ import 'package:for_post/import.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
-  Route<T> getRoute<T>() {
-    return buildRoute<T>(
-      '/login',
-      builder: (_) => this,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -18,12 +11,6 @@ class LoginScreen extends StatelessWidget {
         final loginCubit = LoginCubit(
           dataRepository: RepositoryProvider.of<DatabaseRepository>(context),
         );
-        // final user = MemberModel(
-        //   email: 'JohnDoe@live.net',
-        //   phone: '44444',
-        // );
-        // loginCubit.updateUser(user);
-        // loginCubit.login();
         return loginCubit;
       },
       lazy: false,
@@ -35,7 +22,6 @@ class LoginScreen extends StatelessWidget {
 class _LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final screenHeight = MediaQuery.of(context).size.height;
     return BlocBuilder(
       cubit: BlocProvider.of<LoginCubit>(context),
       builder: (BuildContext context, LoginState loginState) {
@@ -97,7 +83,7 @@ class _LoginBodyState extends State<_LoginBody> {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) {
-                  out('onSaved E-mail=$value');
+                  // out('onSaved E-mail=$value');
                   loginCubit.updateUser(loginCubit.state.user.copyWith(email: value));
                 },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -115,7 +101,7 @@ class _LoginBodyState extends State<_LoginBody> {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.phone,
                 onSaved: (value) {
-                  out('onSaved Phone=$value');
+                  // out('onSaved Phone=$value');
                   loginCubit.updateUser(loginCubit.state.user.copyWith(phone: value));
                 },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -135,11 +121,8 @@ class _LoginBodyState extends State<_LoginBody> {
                         out('Form OK');
                         final result = await loginCubit.login();
                         if (result) {
+                          // ignore: unawaited_futures
                           Get.offAll(HomeScreen());
-                          // navigator.pushAndRemoveUntil(
-                          //   HomeScreen().getRoute(),
-                          //   (Route route) => false,
-                          // );
                         }
                       }
                     },
@@ -156,11 +139,8 @@ class _LoginBodyState extends State<_LoginBody> {
                         out('Form OK');
                         final result = await loginCubit.signup();
                         if (result) {
+                          // ignore: unawaited_futures
                           Get.offAll(HomeScreen());
-                          // navigator.pushAndRemoveUntil(
-                          //   HomeScreen().getRoute(),
-                          //   (Route route) => false,
-                          // );
                         }
                       }
                     },
