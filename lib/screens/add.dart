@@ -32,12 +32,21 @@ class _AddView extends StatelessWidget {
               body: CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    elevation: 0.0,
-                    expandedHeight: screenHeight / 4,
                     title: Text(
                       'New article',
                     ),
                     centerTitle: true,
+                    automaticallyImplyLeading: false,
+                    leading: RaisedButton(
+                      shape: CircleBorder(),
+                      color: Colors.white.withOpacity(0.3),
+                      elevation: 0,
+                      onPressed: () => Get.back(),
+                      child: Icon(Icons.arrow_back),
+                    ),
+                    backgroundColor: Colors.white,
+                    elevation: 0.0,
+                    expandedHeight: screenHeight / 4,
                     flexibleSpace: (addState.newArticle.bannerUrl == null ||
                             addState.newArticle.bannerUrl.isEmpty)
                         ? Center(
@@ -45,7 +54,7 @@ class _AddView extends StatelessWidget {
                           )
                         : FadeInImage.assetNetwork(
                             image: addState.newArticle.bannerUrl,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fitWidth,
                             placeholder: '${kAssetPath}placeholder_img.png',
                             imageErrorBuilder: (context, object, stack) =>
                                 Image.asset('${kAssetPath}placeholder_img.png'),
@@ -108,8 +117,6 @@ class _AddFormState extends State<_AddForm> {
 
   @override
   Widget build(BuildContext context) {
-    // final ArticleModel newArticle = addCubit.state.newArticle;
-    // при изменении URL фото "извне" обновляем содержимое соответствующего поля
     return Form(
       key: _formKey,
       child: Column(
@@ -117,29 +124,21 @@ class _AddFormState extends State<_AddForm> {
         children: [
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Banner url',
+              labelText: 'Banner URL',
               helperText: '',
             ),
             initialValue: 'http:\\',
             textInputAction: TextInputAction.next,
+            onFieldSubmitted: (value) {
+              addCubit.updateArticle(
+                  addCubit.state.newArticle.copyWith(bannerUrl: value));
+            },
             onSaved: (value) {
               addCubit.updateArticle(
                   addCubit.state.newArticle.copyWith(bannerUrl: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              var result = 'Unknown error';
-              if (value.isEmpty) {
-                result = 'Input banner URL';
-              } else if (Uri.parse(value).isAbsolute) {
-                addCubit.updateArticle(
-                    addCubit.state.newArticle.copyWith(bannerUrl: value));
-                result = null;
-              } else {
-                result = 'Input correct url';
-              }
-              return result;
-            },
+            validator: (value) => addCubit.validateBannerUrl(value),
           ),
           TextFormField(
             decoration: InputDecoration(
@@ -153,8 +152,7 @@ class _AddFormState extends State<_AddForm> {
                   addCubit.state.newArticle.copyWith(title: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) =>
-                (value == null || value.isEmpty) ? 'Input title' : null,
+            validator: (value) => addCubit.validateTitle(value),
           ),
           TextFormField(
             decoration: InputDecoration(
@@ -171,15 +169,13 @@ class _AddFormState extends State<_AddForm> {
                   addCubit.state.newArticle.copyWith(description: value));
             },
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) =>
-                (value == null || value.isEmpty) ? 'Input description' : null,
+            validator: (value) => addCubit.validateDescription(value),
           ),
           Center(
             child: ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  out('Form OK');
                   final result = await addCubit.addArticle();
                   if (result) {
                     Get.back(result: addCubit.state.newArticle);

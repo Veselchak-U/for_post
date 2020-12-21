@@ -67,10 +67,6 @@ class DatabaseRepository {
   }
 
   Future<ArticleModel> createArticle(ArticleModel newArticle) async {
-    out('newArticle.member.id=${newArticle.member.id}');
-    out('newArticle.title=${newArticle.title}');
-    out('newArticle.description=${newArticle.description}');
-    out('newArticle.bannerUrl=${newArticle.bannerUrl}');
     final options = MutationOptions(
       documentNode: _API.createArticle,
       variables: {

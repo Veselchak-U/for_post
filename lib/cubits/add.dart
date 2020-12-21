@@ -38,6 +38,28 @@ class AddCubit extends Cubit<AddState> {
     }
     return result;
   }
+
+  String validateBannerUrl(String value) {
+    var result = 'Unknown error';
+    if (value.isEmpty) {
+      result = 'Input banner URL';
+    } else if (Uri.parse(value).isAbsolute) {
+      final newArticle = state.newArticle.copyWith(bannerUrl: value);
+      updateArticle(newArticle);
+      result = null;
+    } else {
+      result = 'Input correct URL';
+    }
+    return result;
+  }
+
+  String validateTitle(String value) {
+    return (value == null || value.isEmpty) ? 'Input title' : null;
+  }
+
+  String validateDescription(String value) {
+    return (value == null || value.isEmpty) ? 'Input description' : null;
+  }
 }
 
 enum AddStatus { initial, busy, ready }
@@ -46,7 +68,7 @@ enum AddStatus { initial, busy, ready }
 class AddState extends Equatable {
   const AddState({
     this.status = AddStatus.initial,
-    this.newArticle = const ArticleModel(),
+    this.newArticle = const ArticleModel(id: 'new_article'),
   });
 
   final AddStatus status;

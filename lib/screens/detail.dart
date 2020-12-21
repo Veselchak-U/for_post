@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:for_post/import.dart';
+import 'package:get/get.dart';
 
 class DetailScreen extends StatelessWidget {
   DetailScreen({
@@ -34,6 +35,14 @@ class _SliverAppBar extends StatelessWidget {
     final double systemTabBarHeight = 24;
 
     return SliverAppBar(
+      automaticallyImplyLeading: false,
+      leading: RaisedButton(
+        shape: CircleBorder(),
+        color: Colors.white.withOpacity(0.3),
+        elevation: 0,
+        onPressed: () => Get.back(),
+        child: Icon(Icons.arrow_back),
+      ),
       backgroundColor: Colors.white,
       elevation: 0.0,
       expandedHeight: imageHeight - systemTabBarHeight,
@@ -67,36 +76,34 @@ class _SliverToBoxAdapter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  article.title,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'by ${article.member.displayName}',
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
-                    Text(
-                      ', ${dateTimeformatter.format(article.createdAt)}',
-                      style: Theme.of(context).textTheme.subtitle2,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                Text(
-                  article.description,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ],
-            ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                article.title,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'by ${article.member.displayName}',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                  Text(
+                    ', ${dateTimeformatter.format(article.createdAt)}',
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              Text(
+                article.description,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+            ],
           ),
         ),
       ),

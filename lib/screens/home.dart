@@ -102,7 +102,7 @@ class _PostCart extends StatelessWidget {
               height: imageHeight,
               width: double.infinity,
               child: Hero(
-                tag: article.id,
+                tag: article.id ?? 'new_article',
                 child: FadeInImage.assetNetwork(
                   image: article.bannerUrl,
                   fit: BoxFit.fitWidth,
