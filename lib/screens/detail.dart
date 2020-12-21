@@ -1,73 +1,102 @@
 import 'package:flutter/material.dart';
 import 'package:for_post/import.dart';
 
-class DetailScreen extends StatefulWidget {
+class DetailScreen extends StatelessWidget {
   DetailScreen({
-    @required this.item,
+    @required this.article,
   });
 
-  final ArticleModel item;
-
-  @override
-  _DetailScreenState createState() => _DetailScreenState();
-}
-
-class _DetailScreenState extends State<DetailScreen> {
-  ArticleModel item;
-
-  @override
-  void initState() {
-    super.initState();
-    item = widget.item;
-  }
+  final ArticleModel article;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('View article'),
-        centerTitle: true,
+      body: CustomScrollView(
+        slivers: [
+          _SliverAppBar(article),
+          _SliverToBoxAdapter(article),
+        ],
       ),
-      body: _Body(item),
     );
   }
 }
 
-class _Body extends StatelessWidget {
-  _Body(this.item);
+class _SliverAppBar extends StatelessWidget {
+  const _SliverAppBar(this.article);
 
-  final ArticleModel item;
+  final ArticleModel article;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                item.title,
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'by ${item.member.displayName}',
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  Text(
-                    ', ${dateTimeformatter.format(item.createdAt)}',
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                ],
-              ),
-              Text(
-                item.description,
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-            ],
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double imageHeight = screenWidth / kGoldenRatio;
+    // TODO: research this
+    final double systemTabBarHeight = 24;
+
+    return SliverAppBar(
+      backgroundColor: Colors.white,
+      elevation: 0.0,
+      expandedHeight: imageHeight - systemTabBarHeight,
+      flexibleSpace: SizedBox(
+        height: imageHeight,
+        width: double.infinity,
+        child: Hero(
+          tag: article.id,
+          child: FadeInImage.assetNetwork(
+            image: article.bannerUrl,
+            fit: BoxFit.cover,
+            placeholder: '${kAssetPath}placeholder_banner.jpg',
+            imageErrorBuilder: (context, object, stack) => Image.asset(
+              '${kAssetPath}placeholder_banner.jpg',
+              height: imageHeight,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SliverToBoxAdapter extends StatelessWidget {
+  const _SliverToBoxAdapter(this.article);
+
+  final ArticleModel article;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: Column(
+              children: [
+                Text(
+                  article.title,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'by ${article.member.displayName}',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    Text(
+                      ', ${dateTimeformatter.format(article.createdAt)}',
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  article.description,
+                  style: Theme.of(context).textTheme.subtitle1,
+                ),
+              ],
+            ),
           ),
         ),
       ),

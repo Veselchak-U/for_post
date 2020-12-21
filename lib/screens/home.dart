@@ -95,21 +95,24 @@ class _PostCart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        onTap: () => Get.to(DetailScreen(item: article)),
+        onTap: () => Get.to(DetailScreen(article: article)),
         child: Column(
           children: [
             SizedBox(
               height: imageHeight,
               width: double.infinity,
-              child: FadeInImage.assetNetwork(
-                image: article.bannerUrl,
-                fit: BoxFit.fitWidth,
-                placeholder: '${kAssetPath}placeholder_banner.jpg',
-                imageErrorBuilder: (context, object, stack) => Image.asset(
-                  '${kAssetPath}placeholder_banner.jpg',
-                  height: imageHeight,
-                  width: double.infinity,
+              child: Hero(
+                tag: article.id,
+                child: FadeInImage.assetNetwork(
+                  image: article.bannerUrl,
                   fit: BoxFit.fitWidth,
+                  placeholder: '${kAssetPath}placeholder_banner.jpg',
+                  imageErrorBuilder: (context, object, stack) => Image.asset(
+                    '${kAssetPath}placeholder_banner.jpg',
+                    height: imageHeight,
+                    width: double.infinity,
+                    fit: BoxFit.fitWidth,
+                  ),
                 ),
               ),
             ),
