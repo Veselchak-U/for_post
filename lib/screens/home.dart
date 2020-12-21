@@ -71,26 +71,63 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final homeCubit = BlocProvider.of<HomeCubit>(context);
     final articles = homeCubit.state.articles;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double imageHeight = screenWidth / kGoldenRatio;
     return RefreshIndicator(
       onRefresh: () => homeCubit.init(isRefresh: true),
       child: ListView.builder(
         itemCount: articles.length,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            leading: FaIcon(FontAwesomeIcons.bookmark),
-            title: Text(
-              articles[index].title,
-              style: Theme.of(context).textTheme.headline6,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Text(
-              'by ${articles[index].member.displayName}',
-              style: Theme.of(context).textTheme.headline6,
-              overflow: TextOverflow.ellipsis,
-            ),
-            onTap: () => Get.to(DetailScreen(item: articles[index])),
-          );
+          return _PostCart(articles[index], imageHeight / 2);
         },
+      ),
+    );
+  }
+}
+
+class _PostCart extends StatelessWidget {
+  _PostCart(this.article, this.imageHeight);
+
+  final ArticleModel article;
+  final double imageHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: InkWell(
+        onTap: () => Get.to(DetailScreen(item: article)),
+        child: Column(
+          children: [
+            SizedBox(
+              height: imageHeight,
+              width: double.infinity,
+              child: FadeInImage.assetNetwork(
+                image: article.bannerUrl,
+                fit: BoxFit.fitWidth,
+                placeholder: '${kAssetPath}placeholder_banner.jpg',
+                imageErrorBuilder: (context, object, stack) => Image.asset(
+                  '${kAssetPath}placeholder_banner.jpg',
+                  height: imageHeight,
+                  width: double.infinity,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: FaIcon(FontAwesomeIcons.bookmark),
+              title: Text(
+                article.title,
+                style: Theme.of(context).textTheme.headline6,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                'by ${article.member.displayName}',
+                style: Theme.of(context).textTheme.subtitle1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

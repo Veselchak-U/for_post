@@ -2,7 +2,7 @@
 
 Test Flutter application for viewing and adding posts.
 
-Technologies: BLoC v.6 (Cubit), code generation, GraphQL, Hasura.
+Technologies: BLoC v.6 (Cubit), code generation, GraphQL, Apollo, Hasura, GetX.
 
 ## Code generation
     $ flutter packages pub run build_runner build --delete-conflicting-outputs

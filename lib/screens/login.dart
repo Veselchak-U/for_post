@@ -49,13 +49,11 @@ class _LoginBody extends StatefulWidget {
 class _LoginBodyState extends State<_LoginBody> {
   final _formKey = GlobalKey<FormState>();
   LoginCubit loginCubit;
-  // MemberModel loginUser;
 
   @override
   void initState() {
     super.initState();
     loginCubit = BlocProvider.of<LoginCubit>(context);
-    // loginUser = loginCubit.state.user;
   }
 
   @override
@@ -67,7 +65,6 @@ class _LoginBodyState extends State<_LoginBody> {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 'For Post',
@@ -83,14 +80,11 @@ class _LoginBodyState extends State<_LoginBody> {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) {
-                  // out('onSaved E-mail=$value');
-                  loginCubit.updateUser(loginCubit.state.user.copyWith(email: value));
+                  final newUser = loginCubit.state.user.copyWith(email: value);
+                  loginCubit.updateUser(newUser);
                 },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) =>
-                    (value == null || value.isEmpty || value.length < 7)
-                        ? 'Input correct e-mail'
-                        : null,
+                validator: (value) => loginCubit.validateEmail(value),
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -101,14 +95,11 @@ class _LoginBodyState extends State<_LoginBody> {
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.phone,
                 onSaved: (value) {
-                  // out('onSaved Phone=$value');
-                  loginCubit.updateUser(loginCubit.state.user.copyWith(phone: value));
+                  final newUser = loginCubit.state.user.copyWith(phone: value);
+                  loginCubit.updateUser(newUser);
                 },
                 autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) =>
-                    (value == null || value.isEmpty || value.length < 5)
-                        ? 'Input correct phone'
-                        : null,
+                validator: (value) => loginCubit.validatePhone(value),
               ),
               const SizedBox(height: 40),
               Row(
@@ -118,7 +109,6 @@ class _LoginBodyState extends State<_LoginBody> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        out('Form OK');
                         final result = await loginCubit.login();
                         if (result) {
                           // ignore: unawaited_futures
@@ -136,7 +126,6 @@ class _LoginBodyState extends State<_LoginBody> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        out('Form OK');
                         final result = await loginCubit.signup();
                         if (result) {
                           // ignore: unawaited_futures

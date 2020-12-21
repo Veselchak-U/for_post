@@ -25,7 +25,7 @@ class LoginCubit extends Cubit<LoginState> {
       errorSnackbar(error);
     }
     if (loginResult == null) {
-      errorSnackbar('Failed to log in with user credentials.');
+      errorSnackbar('Failed to login with this credentials.');
       emit(state.copyWith(
         status: LoginStatus.unauthenticated,
       ));
@@ -66,6 +66,18 @@ class LoginCubit extends Cubit<LoginState> {
       result = true;
     }
     return result;
+  }
+
+  String validateEmail(String value) {
+    return (value == null || value.isEmpty || value.length < 5)
+        ? 'Input correct e-mail'
+        : null;
+  }
+
+  String validatePhone(String value) {
+    return (value == null || value.isEmpty || value.length < 5)
+        ? 'Input correct phone'
+        : null;
   }
 }
 
