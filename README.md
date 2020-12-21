@@ -31,4 +31,5 @@ module.exports = {
 `
 
 3) Download schema.json:
+
     $ apollo schema:download
