@@ -144,8 +144,8 @@ class DatabaseRepository {
     final options = MutationOptions(
       documentNode: _API.upsertMember,
       variables: {
-        'display_name': user.displayName,
-        'photo_url': user.photoUrl,
+        'display_name': user.displayName ?? 'Anonymous',
+        'photo_url': user.photoUrl ?? 'https://www.pngkit.com/png/full/302-3022217_roger-berry-avatar-placeholder.png',
         'email': user.email,
         'phone': user.phone,
       },

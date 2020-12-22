@@ -18,14 +18,18 @@ class LoginCubit extends Cubit<LoginState> {
     bool result = false;
     emit(state.copyWith(status: LoginStatus.busy));
     MemberModel loginResult;
+    bool isError = true;
     try {
       loginResult = await dataRepository.loginMember(state.user);
+      isError = false;
     } catch (error) {
       out('LoginCubit: login(): $error');
       errorSnackbar(error);
     }
     if (loginResult == null) {
-      errorSnackbar('Failed to login with this credentials.');
+      if (!isError) {
+        errorSnackbar('Failed to login with this credentials.');
+      }
       emit(state.copyWith(
         status: LoginStatus.unauthenticated,
       ));
@@ -47,14 +51,18 @@ class LoginCubit extends Cubit<LoginState> {
     bool result = false;
     emit(state.copyWith(status: LoginStatus.busy));
     MemberModel loginResult;
+    bool isError = true;
     try {
       loginResult = await dataRepository.upsertMember(state.user);
+      isError = false;
     } catch (error) {
       out('LoginCubit: signup(): $error');
       errorSnackbar(error);
     }
     if (loginResult == null) {
-      errorSnackbar('Failed to register a new user.');
+      if (!isError) {
+        errorSnackbar('Failed to register a new user.');
+      }
       emit(state.copyWith(
         status: LoginStatus.unauthenticated,
       ));
