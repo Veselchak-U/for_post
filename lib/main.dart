@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
 class AppView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return GetMaterialApp(
       title: 'For Post',
       theme: ThemeData(
